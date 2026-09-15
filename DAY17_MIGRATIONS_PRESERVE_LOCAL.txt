@@ -1,0 +1,12 @@
+INTEGRATION FIX DAY 22
+
+El historial de migraciones local previo quedó desincronizado durante el
+desarrollo. Esta versión corregida ya NO depende de ese historial.
+
+Se usa una base limpia separada:
+FmeaManagerDbDay22
+
+y una migración consolidada:
+20260911173339_InitialDay22
+
+La base anterior FmeaManagerDbV2 queda intacta como respaldo.

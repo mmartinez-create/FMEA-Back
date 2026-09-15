@@ -1,0 +1,368 @@
+@FMEA_Api_HostAddress = https://localhost:7075
+
+### 1. Active customer profiles
+GET {{FMEA_Api_HostAddress}}/api/customer-profiles
+Accept: application/json
+
+### 2. Projects
+GET {{FMEA_Api_HostAddress}}/api/projects
+Accept: application/json
+
+### 3. Create a project
+# Replace customerProfileId with STANDARD or FORD profile id from request 1.
+POST {{FMEA_Api_HostAddress}}/api/projects
+Content-Type: application/json
+
+{
+  "code": "FORD-BATT-001",
+  "name": "12V Battery Launch",
+  "product": "Battery X",
+  "plant": "Toluca",
+  "customerProfileId": "00000000-0000-0000-0000-000000000000",
+  "owner": "Quality Engineering"
+}
+
+### 4. FMEAs in a project
+# Replace PROJECT_ID.
+GET {{FMEA_Api_HostAddress}}/api/projects/PROJECT_ID/fmeas
+Accept: application/json
+
+### 5. Create PFMEA (automatically creates Revision 01 Draft)
+POST {{FMEA_Api_HostAddress}}/api/projects/PROJECT_ID/fmeas
+Content-Type: application/json
+
+{
+  "number": "PFMEA-001",
+  "name": "Battery Assembly Process",
+  "type": 1,
+  "owner": "Quality Engineering"
+}
+
+### FMEA type values
+# 1 = Pfmea
+# 2 = FoundationPfmea
+# 3 = Dfmea
+
+### 6. Get FMEA
+GET {{FMEA_Api_HostAddress}}/api/fmeas/FMEA_ID
+Accept: application/json
+
+### 7. Get FMEA revisions
+GET {{FMEA_Api_HostAddress}}/api/fmeas/FMEA_ID/revisions
+Accept: application/json
+
+### 8. Create next revision
+# The basedOnRevisionId must belong to this FMEA and must be Approved.
+POST {{FMEA_Api_HostAddress}}/api/fmeas/FMEA_ID/revisions
+Content-Type: application/json
+
+{
+  "basedOnRevisionId": "APPROVED_REVISION_ID",
+  "revisionReason": "Process change"
+}
+
+### 9. Get process steps for a revision
+GET {{FMEA_Api_HostAddress}}/api/fmea-revisions/REVISION_ID/process-steps
+Accept: application/json
+
+### 10. Add process step
+POST {{FMEA_Api_HostAddress}}/api/fmea-revisions/REVISION_ID/process-steps
+Content-Type: application/json
+
+{
+  "sequence": 10,
+  "name": "Incoming Material",
+  "function": "Receive and verify incoming material",
+  "requirement": "Material conforms to approved specification"
+}
+
+### 11. Get failure modes for a process step
+GET {{FMEA_Api_HostAddress}}/api/process-steps/PROCESS_STEP_ID/failure-modes
+Accept: application/json
+
+### 12. Create failure mode
+POST {{FMEA_Api_HostAddress}}/api/process-steps/PROCESS_STEP_ID/failure-modes
+Content-Type: application/json
+
+{
+  "description": "Incorrect terminal connection"
+}
+
+### 13. Get failure effects
+GET {{FMEA_Api_HostAddress}}/api/failure-modes/FAILURE_MODE_ID/effects
+Accept: application/json
+
+### 14. Create failure effect
+POST {{FMEA_Api_HostAddress}}/api/failure-modes/FAILURE_MODE_ID/effects
+Content-Type: application/json
+
+{
+  "description": "Vehicle cannot start"
+}
+
+### 15. Get failure causes
+GET {{FMEA_Api_HostAddress}}/api/failure-modes/FAILURE_MODE_ID/causes
+Accept: application/json
+
+### 16. Create failure cause
+POST {{FMEA_Api_HostAddress}}/api/failure-modes/FAILURE_MODE_ID/causes
+Content-Type: application/json
+
+{
+  "description": "Terminal installed in wrong position"
+}
+
+### 17. Get prevention controls
+GET {{FMEA_Api_HostAddress}}/api/failure-causes/FAILURE_CAUSE_ID/prevention-controls
+Accept: application/json
+
+### 18. Create prevention control
+POST {{FMEA_Api_HostAddress}}/api/failure-causes/FAILURE_CAUSE_ID/prevention-controls
+Content-Type: application/json
+
+{
+  "description": "Poka-yoke assembly fixture"
+}
+
+### 19. Get detection controls
+GET {{FMEA_Api_HostAddress}}/api/failure-causes/FAILURE_CAUSE_ID/detection-controls
+Accept: application/json
+
+### 20. Create detection control
+POST {{FMEA_Api_HostAddress}}/api/failure-causes/FAILURE_CAUSE_ID/detection-controls
+Content-Type: application/json
+
+{
+  "description": "Vision inspection"
+}
+
+### 21. Get risk assessment for a failure cause
+GET {{FMEA_Api_HostAddress}}/api/failure-causes/FAILURE_CAUSE_ID/risk-assessment
+Accept: application/json
+
+### 22. Create or update risk assessment
+PUT {{FMEA_Api_HostAddress}}/api/failure-causes/FAILURE_CAUSE_ID/risk-assessment
+Content-Type: application/json
+
+{
+  "severity": 9,
+  "occurrence": 4,
+  "detection": 3
+}
+
+### 23. Product structure tree
+GET {{FMEA_Api_HostAddress}}/api/product-structure
+Accept: application/json
+
+### 24. Create plant
+POST {{FMEA_Api_HostAddress}}/api/plants
+Content-Type: application/json
+
+{
+  "code": "MX-TOL",
+  "name": "Toluca Plant"
+}
+
+### 25. Create production line
+POST {{FMEA_Api_HostAddress}}/api/plants/PLANT_ID/production-lines
+Content-Type: application/json
+
+{
+  "code": "ASSY-01",
+  "name": "Assembly Line 1"
+}
+
+### 26. Create product
+POST {{FMEA_Api_HostAddress}}/api/production-lines/PRODUCTION_LINE_ID/products
+Content-Type: application/json
+
+{
+  "code": "BAT-001",
+  "name": "12V Battery",
+  "partNumber": "PN-001"
+}
+
+### 27. Create project under a product
+POST {{FMEA_Api_HostAddress}}/api/products/PRODUCT_ID/projects
+Content-Type: application/json
+
+{
+  "code": "PROJ-BAT-001",
+  "name": "Battery Quality Project",
+  "customerProfileId": "CUSTOMER_PROFILE_ID",
+  "owner": "Quality Engineering"
+}
+
+### Day 17 - Access control - current user
+GET {{FMEA_Api_HostAddress}}/api/access-control/me
+X-Fmea-User: local-development
+Accept: application/json
+
+### Day 17 - Effective access at System scope
+GET {{FMEA_Api_HostAddress}}/api/access-control/effective?scopeType=0&scopeId=00000000-0000-0000-0000-000000000000
+X-Fmea-User: local-development
+Accept: application/json
+
+### Day 17 - Effective access at Product scope
+GET {{FMEA_Api_HostAddress}}/api/access-control/effective?scopeType=3&scopeId=PRODUCT_ID
+X-Fmea-User: local-development
+Accept: application/json
+
+### Day 17 - Grant Read/Edit at Plant scope
+PUT {{FMEA_Api_HostAddress}}/api/access-control/users/quality.engineer@company.com/assignments
+X-Fmea-User: local-development
+Content-Type: application/json
+
+{
+  "scopeType": 1,
+  "scopeId": "PLANT_ID",
+  "canRead": true,
+  "canEdit": true,
+  "canApprove": false
+}
+
+### Day 17 - Grant Approve at Project scope
+PUT {{FMEA_Api_HostAddress}}/api/access-control/users/quality.leader@company.com/assignments
+X-Fmea-User: local-development
+Content-Type: application/json
+
+{
+  "scopeType": 4,
+  "scopeId": "PROJECT_ID",
+  "canRead": true,
+  "canEdit": false,
+  "canApprove": true
+}
+
+### Day 17 - List assignments visible to current user
+GET {{FMEA_Api_HostAddress}}/api/access-control/users/quality.engineer@company.com/assignments
+X-Fmea-User: local-development
+Accept: application/json
+
+### Day 17 - Submit FMEA revision for review (requires Edit)
+POST {{FMEA_Api_HostAddress}}/api/fmea-revisions/REVISION_ID/submit
+X-Fmea-User: quality.engineer@company.com
+Content-Type: application/json
+
+{}
+
+### Day 17 - Approve revision (requires Approve)
+POST {{FMEA_Api_HostAddress}}/api/fmea-revisions/REVISION_ID/approve
+X-Fmea-User: quality.leader@company.com
+Content-Type: application/json
+
+{}
+
+### Day 17 - Reject revision (requires Approve)
+POST {{FMEA_Api_HostAddress}}/api/fmea-revisions/REVISION_ID/reject
+X-Fmea-User: quality.leader@company.com
+Content-Type: application/json
+
+{
+  "reason": "Update detection control before approval."
+}
+
+### Day 17 - Revoke direct assignment
+DELETE {{FMEA_Api_HostAddress}}/api/access-control/users/quality.engineer@company.com/assignments?scopeType=1&scopeId=PLANT_ID
+X-Fmea-User: local-development
+Accept: application/json
+
+### Day 18 - Latest project activity
+GET {{FMEA_Api_HostAddress}}/api/projects/PROJECT_ID/last-activity
+Accept: application/json
+X-Fmea-User: local-development
+
+### Day 19 - Get shared Product Process / ASMF
+GET {{FMEA_Api_HostAddress}}/api/projects/PROJECT_ID/product-process
+Accept: application/json
+X-Fmea-User: local-development
+
+### Day 19 - Create shared Product Process / ASMF
+POST {{FMEA_Api_HostAddress}}/api/projects/PROJECT_ID/product-process
+Content-Type: application/json
+X-Fmea-User: local-development
+
+{
+  "name": "Main Manufacturing Process",
+  "description": "Shared process structure for ASMF, PFMEA and Control Plan"
+}
+
+### Day 19 - Add ASMF process step
+POST {{FMEA_Api_HostAddress}}/api/product-processes/PRODUCT_PROCESS_ID/steps
+Content-Type: application/json
+X-Fmea-User: local-development
+
+{
+  "sequence": 10,
+  "name": "Material Receiving",
+  "function": "Receive approved material",
+  "requirement": "Correct material and identification"
+}
+
+### Day 19 - Edit ASMF process step
+PUT {{FMEA_Api_HostAddress}}/api/product-process-steps/PRODUCT_PROCESS_STEP_ID
+Content-Type: application/json
+X-Fmea-User: local-development
+
+{
+  "sequence": 20,
+  "name": "Terminal Assembly",
+  "function": "Assemble terminal",
+  "requirement": "Correct polarity and secure connection"
+}
+
+### Day 20 - Read synchronized PFMEA structure
+GET {{FMEA_Api_HostAddress}}/api/fmea-revisions/REVISION_ID/synced-process-steps
+Accept: application/json
+X-Fmea-User: local-development
+
+### Day 20 - Synchronize PFMEA with ASMF
+POST {{FMEA_Api_HostAddress}}/api/fmea-revisions/REVISION_ID/sync-product-process
+Accept: application/json
+X-Fmea-User: local-development
+
+### Day 21 - Control Plan
+GET {{FMEA_Api_HostAddress}}/api/projects/PROJECT_ID/control-plan
+Accept: application/json
+X-Fmea-User: local-development
+
+### Create Control Plan
+POST {{FMEA_Api_HostAddress}}/api/projects/PROJECT_ID/control-plan
+Content-Type: application/json
+X-Fmea-User: local-development
+
+{
+  "number": "CP-001",
+  "name": "Battery Manufacturing Control Plan"
+}
+
+### Add Control Plan characteristic
+POST {{FMEA_Api_HostAddress}}/api/projects/PROJECT_ID/control-plan/items
+Content-Type: application/json
+X-Fmea-User: local-development
+
+{
+  "productProcessStepId": "PRODUCT_PROCESS_STEP_ID",
+  "characteristicNumber": "20.1",
+  "characteristicType": 1,
+  "characteristicName": "Terminal height",
+  "machineTooling": "Press fixture",
+  "specialCharacteristic": "SC",
+  "specificationTolerance": "12.0 ± 0.2 mm",
+  "evaluationMeasurementTechnique": "Digital height gauge",
+  "sampleSize": 3,
+  "sampleFrequency": "Every hour",
+  "controlMethod": "SPC chart",
+  "reactionPlan": "Stop line, segregate product and notify Quality"
+}
+
+### Day 22 - Project document traceability
+GET {{FMEA_Api_HostAddress}}/api/projects/PROJECT_ID/document-traceability
+Accept: application/json
+X-Fmea-User: local-development
+
+### Day 22 - Synchronize ASMF / PFMEA / Control Plan
+POST {{FMEA_Api_HostAddress}}/api/projects/PROJECT_ID/document-traceability/synchronize
+Accept: application/json
+X-Fmea-User: local-development
+

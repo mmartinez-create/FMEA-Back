@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="FMEA-Api/FMEA-Api.csproj" />
+  <Project Path="FmeaManager.Domain/FmeaManager.Domain.csproj" />
+  <Project Path="FmeaManager.Domain.Tests/FmeaManager.Domain.Tests.csproj" />
+  <Project Path="FmeaManager.Application/FmeaManager.Application.csproj" />
+  <Project Path="FmeaManager.Application.Tests/FmeaManager.Application.Tests.csproj" />
+  <Project Path="FmeaManager.Infrastructure/FmeaManager.Infrastructure.csproj" />
+</Solution>
